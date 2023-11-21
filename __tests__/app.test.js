@@ -3,7 +3,7 @@ const seed = require('../db/seeds/seed')
 const data = require('../db/data/test-data/index')
 const request = require('supertest')
 const app = require('../app/app')
-const endpoints = require('../endpoints.json')
+const expectedEndpoints = require('../endpoints.json');
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -29,7 +29,6 @@ describe('GET /api/topics', () => {
 
 describe('GET /api', () => {
     test('should respond with the content of endpoints.json', () => {
-      const expectedEndpoints = require('../endpoints.json');
       return request(app)
         .get('/api')
         .expect(200)

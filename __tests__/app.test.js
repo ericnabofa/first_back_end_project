@@ -26,20 +26,16 @@ describe('GET /api/topics', () => {
     });
 });
 
+
 describe('GET /api', () => {
-    test('should respond with an object describing all the available endpoints on your API', () => {
-        return request(app)
+    test('should respond with the content of endpoints.json', () => {
+      const expectedEndpoints = require('../endpoints.json');
+      return request(app)
         .get('/api')
         .expect(200)
-        .then(({body}) => {
-            const endpointsList = body
-            expect(typeof endpointsList).toBe('object')
-            Object.entries(endpoints).forEach(([endpoint, data]) => {
-                expect(endpointsList[endpoint]).toBeDefined();
-                expect(endpointsList[endpoint].description).toEqual(data.description);
-                expect(endpointsList[endpoint].queries).toEqual(data.queries);
-                expect(endpointsList[endpoint].exampleResponse).toEqual(data.exampleResponse);
-            })
-        })
+        .then(({ body }) => {
+          expect(body).toEqual(expectedEndpoints);
+        });
     });
-});
+  });
+  

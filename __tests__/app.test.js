@@ -32,6 +32,7 @@ describe('GET /api/articles', () => {
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body;
+                expect(articles).toHaveLength(13)
                 for (const article of articles) {
                     expect(article).toMatchObject({
                         author: expect.any(String),

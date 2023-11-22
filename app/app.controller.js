@@ -9,8 +9,8 @@ res.status(200).send({ topics})
 }
 
 exports.getAllArticles = (req, res, next) => {
-    selectArticles().then((processedArticles)=> {
-        res.status(200).send({articles: processedArticles})
+    selectArticles().then((articles)=> {
+        res.status(200).send({articles})
     })
     .catch(next)
 }

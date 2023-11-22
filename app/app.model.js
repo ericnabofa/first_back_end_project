@@ -2,37 +2,36 @@ const db = require('../db/connection')
 
 exports.selectTopics = () => {
 return db.query(`SELECT * FROM topics`)
-.then((results) => {
-    return results.rows;
+.then(({rows}) => {
+    return rows;
 })
 }
 
 
 // Ticket 5_Get-Articles
-function getEveryArticles() {
-    return db.query('SELECT * FROM articles ORDER BY created_at DESC')
-        .then(({ rows }) => {
-            return rows;
-        });
-}
-
-function getCommentCount(articleId) {
-    return db.query('SELECT COUNT(*) AS comment_count FROM comments WHERE article_id = $1', [articleId])
-        .then(({rows}) => {
-            return rows[0].comment_count}
-            );
-}
 
 exports.selectArticles = () => {
-    return getEveryArticles()
-        .then((articles) => {
-            const processedArticlesPromises = articles.map((article) => {
-                return getCommentCount(article.article_id)
-        .then((comment_count) => {
-            const { body, ...articleWithoutBody } = article;
-                return { ...articleWithoutBody, comment_count };
-                    });
-            });
-            return Promise.all(processedArticlesPromises);
-        });
+    return db.query(`
+        SELECT 
+            a.article_id,
+            a.author,
+            a.title,
+            a.topic,
+            a.created_at,
+            a.votes,
+            a.article_img_url,
+            COUNT(c.comment_id) AS comment_count
+        FROM 
+            articles a
+        LEFT JOIN 
+            comments c ON a.article_id = c.article_id
+        GROUP BY 
+            a.article_id, a.author, a.title, a.topic, a.created_at, a.votes, a.article_img_url
+        ORDER BY 
+            a.created_at DESC
+    `)
+    .then(({ rows }) => {
+        console.log(rows)
+        return rows;
+    });
 };

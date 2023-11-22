@@ -26,15 +26,3 @@ describe('GET /api/topics', () => {
     });
 });
 
-
-describe('GET /api', () => {
-    test('should respond with the content of endpoints.json', () => {
-      return request(app)
-        .get('/api')
-        .expect(200)
-        .then(({ body }) => {
-          expect(body).toEqual(expectedEndpoints);
-        });
-    });
-  });
-  

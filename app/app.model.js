@@ -1,5 +1,6 @@
 const db = require('../db/connection')
 
+
 exports.selectTopics = () => {
 return db.query(`SELECT * FROM topics`)
 .then((results) => {
@@ -16,3 +17,5 @@ exports.selectArticleById = (article_id) => {
         return rows[0]
     })
 }
+
+  

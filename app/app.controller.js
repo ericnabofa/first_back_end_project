@@ -1,4 +1,5 @@
 const { selectTopics, selectArticleById } = require("./app.model")
+const endpoints = require('../endpoints.json')
 
 
 exports.getAllTopics = (req, res, next) => {
@@ -14,4 +15,12 @@ exports.getArticleByid = (req, res, next) => {
         res.status(200).send({article})
     })
     .catch(next)
+}
+
+exports.getApiEndpoints = (req, res, next) => {
+    if (endpoints){
+        res.status(200).json(endpoints)
+    } else {
+        next(err)
+    }
 }

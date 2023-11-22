@@ -1,13 +1,13 @@
 const express = require('express');
-const { getAllTopics, getApiEndpoints, getArticleByid } = require('./app.controller');
+const { getAllTopics, getAllArticles, getApiEndpoints, getArticleByid } = require('./app.controller');
 const { handleServerErrors, handleCustomErrors, handlePsqlErrors} = require('../errors');
 
 
 const app = express();
 
 app.get('/api/topics', getAllTopics)
+app.get('/api/articles', getAllArticles)
 app.get('/api/articles/:article_id', getArticleByid)
-
 app.get('/api', getApiEndpoints)
 
 

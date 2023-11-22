@@ -31,7 +31,6 @@ exports.selectArticles = () => {
             a.created_at DESC
     `)
     .then(({ rows }) => {
-        console.log(rows)
         return rows;
     });
 };

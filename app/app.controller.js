@@ -1,4 +1,4 @@
-const { selectTopics, selectApiEndpoints } = require("./app.model")
+const { selectTopics, selectArticleById } = require("./app.model")
 const endpoints = require('../endpoints.json')
 
 
@@ -7,6 +7,14 @@ selectTopics().then((topics) => {
 res.status(200).send({ topics})
 })
 .catch(next)
+}
+
+exports.getArticleByid = (req, res, next) => {
+    const {article_id} = req.params
+    selectArticleById(article_id).then((article) => {
+        res.status(200).send({article})
+    })
+    .catch(next)
 }
 
 exports.getApiEndpoints = (req, res, next) => {

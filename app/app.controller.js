@@ -1,4 +1,4 @@
-const { selectTopics, selectArticles, selectArticleById } = require("./app.model")
+const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticleId } = require("./app.model")
 const endpoints = require('../endpoints.json')
 
 
@@ -30,4 +30,12 @@ exports.getApiEndpoints = (req, res, next) => {
     } else {
         next(err)
     }
+}
+
+exports.getAllArticleComments = (req, res, next) => {
+    const {article_id} = req.params
+    selectCommentsByArticleId(article_id).then((comments) => {
+        res.status(200).send({comments})
+    })
+    .catch(next)
 }

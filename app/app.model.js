@@ -1,4 +1,5 @@
-const db = require('../db/connection')
+const db = require('../db/connection');
+const comments = require('../db/data/test-data/comments');
 
 
 exports.selectTopics = () => {
@@ -62,9 +63,6 @@ ORDER BY
 c.created_at DESC
 `, [article_id])
 .then(({rows}) => {
-    if(!rows.length){
-        return Promise.reject({status: 404, msg: 'comment does not exist'})
-    }
-return rows
+    return rows 
 })
 }

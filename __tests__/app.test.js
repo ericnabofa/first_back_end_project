@@ -4,6 +4,7 @@ const data = require('../db/data/test-data/index')
 const request = require('supertest')
 const app = require('../app/app')
 const expectedEndpoints = require('../endpoints.json');
+const expect = require('expect')
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -125,8 +126,7 @@ describe('GET /api', () => {
               article_id: 1,
             });
           }
-          const timestamps = comments.map(comment => new Date(comment.created_at).getTime());
-        expect(timestamps).toEqual([...timestamps].sort((a, b) => b - a));
+          expect(comments).toBeSortedBy('created_at', { descending: true })
         });
     })
 
@@ -135,7 +135,7 @@ describe('GET /api', () => {
           .get('/api/articles/100/comments')
           .expect(404)
           .then((response) => {
-            expect(response.body.msg).toBe('comment does not exist');
+            expect(response.body.msg).toBe('article does not exist');
           });
       });
 
@@ -147,4 +147,16 @@ describe('GET /api', () => {
             expect(body.msg).toBe('Bad Request')
         })
     });
+
+    test('200: responds with an empty array when the article has no comments', () => {
+
+        return request(app)
+          .get('/api/articles/8/comments')
+          .expect(200)
+          .then(({ body }) => {
+            const { comments } = body;
+            expect(comments).toBeInstanceOf(Array);
+            expect(comments).toHaveLength(0);
+          });
+      });
 })

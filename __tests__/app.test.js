@@ -104,3 +104,24 @@ describe('GET /api', () => {
 
   
   
+// describe('POST /api/articles/:article_id/comments', () => {
+//     test('should respond with the posted comment object', () => {
+//         const comment = {
+//             username: 'butter_bridge',
+//             body: 'I am commenting for Eric!'
+//         }
+
+//         return request(app)
+//         .post('/api/articles/:article_id/comments')
+//         .send(comment)
+//         .expect(201)
+//         .then(({body}) => {
+//             const comments = body
+//             for(const comment of comments){
+//                 expect(comment).toMatchObject({
+                      
+//                 })
+//             }
+//         })
+//     })
+// });

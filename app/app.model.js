@@ -46,3 +46,6 @@ exports.selectArticleById = (article_id) => {
 }
 
   
+exports.insertCommentByArticle_Id = (article_id) => {
+    
+}

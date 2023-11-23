@@ -1,4 +1,4 @@
-const { selectTopics, selectArticles, selectArticleById } = require("./app.model")
+const { selectTopics, selectArticles, selectArticleById, insertCommentByArticle_Id } = require("./app.model")
 const endpoints = require('../endpoints.json')
 
 
@@ -30,4 +30,8 @@ exports.getApiEndpoints = (req, res, next) => {
     } else {
         next(err)
     }
+}
+
+exports.postCommentByArticleId = () => {
+    insertCommentByArticle_Id()
 }

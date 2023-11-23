@@ -121,14 +121,14 @@ describe('POST /api/articles/:article_id/comments', () => {
                      author: expect.any(String),
                      body: expect.any(String),
                      votes: expect.any(Number),
-                     article_id: expect.any(Number),
+                     article_id: 1,
                      created_at: expect.any(String),
                      comment_id: expect.any(Number)
                 })
         })
     })
 
-    test('GET:400 sends an appropriate status and error message when given a non-existent article_id', () => {
+    test('POST:400 sends an appropriate status and error message when given a non-existent article_id', () => {
         const comment = {
             username: 'butter_bridge',
             body: 'I am commenting for Eric!'
@@ -143,7 +143,7 @@ describe('POST /api/articles/:article_id/comments', () => {
           });
       });
 
-    test('GET:400 sends an appropriate status and error message when given an invalid comment', () => {
+    test('POST:400 sends an appropriate status and error message when given an invalid comment', () => {
         const comment = {}
 
         return request(app)
@@ -154,4 +154,19 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(body.msg).toBe('Bad Request')
         })
     });
+
+    test('POST:400 sends an appropriate status and error message when given a valid a non-existent article_id', () => {
+        const comment = {
+            username: 'butter_bridge',
+            body: 'I am commenting for Eric!'
+        }
+
+        return request(app)
+          .post('/api/articles/999/comments')
+          .send(comment)
+          .expect(400)
+          .then(({body}) => {
+            expect(body.msg).toBe('Bad Request');
+          });
+      });
 });

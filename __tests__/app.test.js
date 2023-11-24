@@ -155,7 +155,7 @@ describe('POST /api/articles/:article_id/comments', () => {
         })
     });
 
-    test('POST:400 sends an appropriate status and error message when given a valid a non-existent article_id', () => {
+    test('POST:404 sends an appropriate status and error message when given a valid a non-existent article_id', () => {
         const comment = {
             username: 'butter_bridge',
             body: 'I am commenting for Eric!'
@@ -164,9 +164,9 @@ describe('POST /api/articles/:article_id/comments', () => {
         return request(app)
           .post('/api/articles/999/comments')
           .send(comment)
-          .expect(400)
+          .expect(404)
           .then(({body}) => {
-            expect(body.msg).toBe('Bad Request');
+            expect(body.msg).toBe('article does not exist');
           });
       });
 });

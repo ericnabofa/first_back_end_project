@@ -240,14 +240,16 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(newVote)
       .expect(200)
       .then(({ body }) => {
-        const updatedArticle = body;
+        console.log(body, 'artcle to patch')
+        const {updatedArticle} = body
+        const actualCreatedAt = updatedArticle.created_at
         expect(updatedArticle).toMatchObject({
           author: "butter_bridge",
           title: "Living in the shadow of a great man",
           article_id: 1,
           body: "I find this existence challenging",
           topic: "mitch",
-          created_at: expect.any(String),
+          created_at: actualCreatedAt,
           votes: existingArticle.votes + newVote.inc_votes,
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",

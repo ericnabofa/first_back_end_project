@@ -62,8 +62,8 @@ exports.postCommentByArticleId = (req, res, next) => {
 exports.updateArticle = (req, res, next) => {
     const {article_id} = req.params
     const {inc_votes} =  req.body
-    patchArticle(inc_votes, article_id).then((updateArticle) => {
-        res.status(200).send(updateArticle)
+    patchArticle(inc_votes, article_id).then((updatedArticle) => {
+        res.status(200).send({updatedArticle})
     })
     .catch(next)
 }

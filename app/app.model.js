@@ -83,3 +83,16 @@ exports.insertCommentByArticle_Id = (article_id, username, body) => {
         return rows[0]
     })
 }
+
+exports.patchArticle = (inc_votes, article_id) => {
+    const queryString = `UPDATE articles 
+    SET votes = votes + $1 WHERE article_id = $2 
+    RETURNING *`
+
+    const queryValues = [inc_votes, article_id]
+
+    return db.query(queryString, queryValues)
+    .then(({rows}) => {
+        return rows[0]
+    })
+}

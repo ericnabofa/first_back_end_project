@@ -1,4 +1,4 @@
-const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticleId, insertCommentByArticle_Id } = require("./app.model")
+const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticleId, insertCommentByArticle_Id, patchArticle } = require("./app.model")
 const endpoints = require('../endpoints.json')
 const { checkArticleExists } = require("./app.articles.model")
 
@@ -55,6 +55,15 @@ exports.postCommentByArticleId = (req, res, next) => {
     const {username, body} = req.body;
     insertCommentByArticle_Id(article_id, username, body).then((comment) => {
         res.status(201).send({comment})
+    })
+    .catch(next)
+}
+
+exports.updateArticle = (req, res, next) => {
+    const {article_id} = req.params
+    const {inc_votes} =  req.body
+    patchArticle(inc_votes, article_id).then((updateArticle) => {
+        res.status(200).send(updateArticle)
     })
     .catch(next)
 }

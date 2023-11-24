@@ -81,7 +81,7 @@ describe('GET /api/articles/:article_id', () => {
           .get('/api/articles/100')
           .expect(404)
           .then((response) => {
-            expect(response.body.msg).toBe('article does not exist');
+            expect(response.body.msg).toBe('does not exist');
           });
       });
 
@@ -137,7 +137,7 @@ describe('GET /api', () => {
           .get('/api/articles/100/comments')
           .expect(404)
           .then((response) => {
-            expect(response.body.msg).toBe('article does not exist');
+            expect(response.body.msg).toBe('does not exist');
           });
       });
 
@@ -220,7 +220,7 @@ describe('POST /api/articles/:article_id/comments', () => {
         .send(comment)
         .expect(404)
         .then(({body}) => {
-          expect(body.msg).toBe('article does not exist');
+          expect(body.msg).toBe('does not exist');
         });
     });
 });

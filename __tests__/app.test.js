@@ -4,7 +4,7 @@ const data = require('../db/data/test-data/index')
 const request = require('supertest')
 const app = require('../app/app')
 const expectedEndpoints = require('../endpoints.json');
-const expect = require('expect')
+
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -62,6 +62,7 @@ describe('GET /api/articles/:article_id', () => {
             const {article} = body
             const actualCreatedAt = article.created_at;
             expect(article).toMatchObject({
+
                 author: 'butter_bridge',
                 title: 'Living in the shadow of a great man',
                 article_id: 1,
@@ -223,3 +224,4 @@ describe('POST /api/articles/:article_id/comments', () => {
         });
     });
 });
+

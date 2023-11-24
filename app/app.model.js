@@ -1,5 +1,4 @@
 const db = require('../db/connection');
-const comments = require('../db/data/test-data/comments');
 
 
 exports.selectTopics = () => {
@@ -36,6 +35,8 @@ exports.selectArticles = () => {
         return rows;
     });
 };
+
+
 exports.selectArticleById = (article_id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
     .then(({rows}) => {
@@ -65,4 +66,20 @@ c.created_at DESC
 .then(({rows}) => {
     return rows 
 })
+}
+
+exports.insertCommentByArticle_Id = (article_id, username, body) => {
+
+    const queryString = `
+    INSERT INTO comments (article_id, body, votes, author, created_at)
+    VALUES ($1, $2, 0, $3, NOW())
+    RETURNING *;
+    `
+
+    const queryValues = [article_id, body, username]
+
+    return db.query(queryString, queryValues)
+    .then(({rows}) => {
+        return rows[0]
+    })
 }

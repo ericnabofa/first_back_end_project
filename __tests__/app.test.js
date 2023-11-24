@@ -157,7 +157,6 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-
 describe("POST /api/articles/:article_id/comments", () => {
   test("should respond with the posted comment object", () => {
     const comment = {
@@ -222,17 +221,17 @@ describe("POST /api/articles/:article_id/comments", () => {
 
 describe("PATCH /api/articles/:article_id", () => {
   test("should update an article by article_id", () => {
-  const existingArticle = {
-    author: "butter_bridge",
-    title: "Living in the shadow of a great man",
-    article_id: 1,
-    body: "I find this existence challenging",
-    topic: "mitch",
-    created_at: 1594329060000,
-    votes: 100,
-    article_img_url:
-      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-  };
+    const existingArticle = {
+      author: "butter_bridge",
+      title: "Living in the shadow of a great man",
+      article_id: 1,
+      body: "I find this existence challenging",
+      topic: "mitch",
+      created_at: 1594329060000,
+      votes: 100,
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    };
 
     const newVote = { inc_votes: 8 };
 
@@ -255,4 +254,46 @@ describe("PATCH /api/articles/:article_id", () => {
         });
       });
   });
-});
+
+  test("PATCH: 400 sends an appropriate status and error message when given an invalid vote body", () => {
+    return request(app)
+      .patch('/api/articles/1')
+      .send({})
+      .expect(400)
+      .then(({body}) => {
+        expect(body.msg).toBe('Bad Request')
+      });
+  });
+
+  test("PATCH: 400 sends an appropriate status and error message when given a non-existent article_id", () => {
+    return request(app)
+      .patch('/api/articles/not-an-articel_id')
+      .send({ inc_votes: 5 })
+      .expect(400)
+      .then(({body}) => {
+        expect(body.msg).toBe('Bad Request')
+      });
+    })
+
+    test("PATCH: 400 sends an appropriate status and error message when given an invalid vote value", () => {
+      const invalidVoteValue = { inc_votes: "word" };
+
+      return request(app)
+        .patch('/api/articles/1')
+        .send(invalidVoteValue)
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request')
+        });
+    });
+    
+    test("PATCH: 404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+      return request(app)
+        .patch("/api/articles/99")
+        .send({ inc_votes: 5 })
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('article does not exist')
+        });
+    });
+  });

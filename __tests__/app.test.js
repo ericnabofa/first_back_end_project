@@ -51,14 +51,16 @@ describe('GET /api/articles', () => {
             });
     });
 })
+
 describe('GET /api/articles/:article_id', () => {
     test('200: should respond with an article object gotten by its article_id', () => {
         return request(app)
         .get('/api/articles/1')
         .expect(200)
         .then(({body}) => {
-            const actualCreatedAt = body.article.created_at;
-            expect(body.article).toMatchObject({
+            const {article} = body
+            const actualCreatedAt = article.created_at;
+            expect(article).toMatchObject({
                 author: 'butter_bridge',
                 title: 'Living in the shadow of a great man',
                 article_id: 1,
@@ -103,70 +105,120 @@ describe('GET /api', () => {
   });
 
   
-  
-describe('POST /api/articles/:article_id/comments', () => {
-    test('should respond with the posted comment object', () => {
-        const comment = {
-            username: 'butter_bridge',
-            body: 'I am commenting for Eric!'
-        }
 
-        return request(app)
-        .post('/api/articles/1/comments')
-        .send(comment)
-        .expect(201)
-        .then(({body}) => {
-            const {comment} = body
-                expect(comment).toMatchObject({
-                     author: expect.any(String),
-                     body: expect.any(String),
-                     votes: expect.any(Number),
-                     article_id: 1,
-                     created_at: expect.any(String),
-                     comment_id: expect.any(Number)
-                })
-        })
+  describe('GET /api/articles/:article_id/comments', () => {
+    test('200: responds with an array of comments for the given article_id', () => {  
+      return request(app)
+        .get(`/api/articles/1/comments`)
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments).toBeInstanceOf(Array);
+          expect(comments.length).toBeGreaterThan(0);
+  
+          for (const comment of comments) {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              article_id: 1,
+            });
+          }
+          expect(comments).toBeSortedBy('created_at', { descending: true })
+        });
     })
 
-    test('POST:400 sends an appropriate status and error message when given a non-existent article_id', () => {
-        const comment = {
-            username: 'butter_bridge',
-            body: 'I am commenting for Eric!'
-        }
-
+    test('GET:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
         return request(app)
-          .post('/api/articles/nonExistenArticleId/comments')
-          .send(comment)
-          .expect(400)
-          .then(({body}) => {
-            expect(body.msg).toBe('Bad Request');
+          .get('/api/articles/100/comments')
+          .expect(404)
+          .then((response) => {
+            expect(response.body.msg).toBe('article does not exist');
           });
       });
 
-    test('POST:400 sends an appropriate status and error message when given an invalid comment', () => {
-        const comment = {}
-
+    test('GET:400 sends an appropriate status and error message when given an invalid id', () => {
         return request(app)
-        .post('/api/articles/1/comments')
-        .send(comment)
+        .get('/api/articles/not-an-article/comments')
         .expect(400)
         .then(({body}) => {
             expect(body.msg).toBe('Bad Request')
         })
     });
 
-    test('POST:404 sends an appropriate status and error message when given a valid a non-existent article_id', () => {
-        const comment = {
-            username: 'butter_bridge',
-            body: 'I am commenting for Eric!'
-        }
+    test('200: responds with an empty array when the article has no comments', () => {
 
         return request(app)
-          .post('/api/articles/999/comments')
-          .send(comment)
-          .expect(404)
-          .then(({body}) => {
-            expect(body.msg).toBe('article does not exist');
+          .get('/api/articles/4/comments')
+          .expect(200)
+          .then(({ body }) => {
+            const { comments } = body;
+            expect(comments).toBeInstanceOf(Array);
+            expect(comments).toHaveLength(0);
           });
       });
+})
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('should respond with the posted comment object', () => {
+      const comment = {
+          username: 'butter_bridge',
+          body: 'I am commenting for Eric!'
+      }
+      return request(app)
+      .post('/api/articles/1/comments')
+      .send(comment)
+      .expect(201)
+      .then(({body}) => {
+          const {comment} = body
+              expect(comment).toMatchObject({
+                   author: expect.any(String),
+                   body: expect.any(String),
+                   votes: expect.any(Number),
+                   article_id: 1,
+                   created_at: expect.any(String),
+                   comment_id: expect.any(Number)
+              })
+      })
+  })
+  test('POST:400 sends an appropriate status and error message when given a non-existent article_id', () => {
+      const comment = {
+          username: 'butter_bridge',
+          body: 'I am commenting for Eric!'
+      }
+      return request(app)
+        .post('/api/articles/nonExistenArticleId/comments')
+        .send(comment)
+        .expect(400)
+        .then(({body}) => {
+          expect(body.msg).toBe('Bad Request');
+        });
+    });
+  test('POST:400 sends an appropriate status and error message when given an invalid comment', () => {
+      const comment = {}
+      return request(app)
+      .post('/api/articles/1/comments')
+      .send(comment)
+      .expect(400)
+      .then(({body}) => {
+          expect(body.msg).toBe('Bad Request')
+      })
+  });
+
+  test('POST:404 sends an appropriate status and error message when given a valid a non-existent article_id', () => {
+      const comment = {
+          username: 'butter_bridge',
+          body: 'I am commenting for Eric!'
+      }
+
+      return request(app)
+        .post('/api/articles/999/comments')
+        .send(comment)
+        .expect(404)
+        .then(({body}) => {
+          expect(body.msg).toBe('article does not exist');
+        });
+    });
 });

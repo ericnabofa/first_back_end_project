@@ -4,6 +4,7 @@ const data = require('../db/data/test-data/index')
 const request = require('supertest')
 const app = require('../app/app')
 const expectedEndpoints = require('../endpoints.json');
+const expect = require('expect')
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -151,7 +152,7 @@ describe('GET /api', () => {
     test('200: responds with an empty array when the article has no comments', () => {
 
         return request(app)
-          .get('/api/articles/4/comments')
+          .get('/api/articles/8/comments')
           .expect(200)
           .then(({ body }) => {
             const { comments } = body;

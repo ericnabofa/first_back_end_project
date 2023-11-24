@@ -48,6 +48,7 @@ exports.selectArticleById = (article_id) => {
     })
 }
 
+  
 exports.selectCommentsByArticleId = (article_id) => {
 return db.query(`SELECT
 c.comment_id,

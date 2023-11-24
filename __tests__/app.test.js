@@ -225,3 +225,34 @@ describe('POST /api/articles/:article_id/comments', () => {
     });
 });
 
+
+describe('Topic Query /api/articles?topics', () => {
+  test('should return filtered article by topic query value', () => {
+    return request(app)
+    .get('/api/articles?topic=mitch')
+    .expect(200)
+    .then(({body}) => {
+      const {articles} = body
+      for (const article of articles){
+        expect(article).toMatchObject({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          topic: expect.stringMatching('mitch'),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String)
+        })
+      }
+    })
+  });
+
+	test('404: returns not found for entry that does not exist', () => {
+		return request(app)
+			.get('/api/articles?topic=not-a-topic')
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('does not exist');
+			});
+	});
+});

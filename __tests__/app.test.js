@@ -81,7 +81,7 @@ describe('GET /api/articles/:article_id', () => {
           .get('/api/articles/100')
           .expect(404)
           .then((response) => {
-            expect(response.body.msg).toBe('article does not exist');
+            expect(response.body.msg).toBe('does not exist');
           });
       });
 
@@ -137,7 +137,7 @@ describe('GET /api', () => {
           .get('/api/articles/100/comments')
           .expect(404)
           .then((response) => {
-            expect(response.body.msg).toBe('article does not exist');
+            expect(response.body.msg).toBe('does not exist');
           });
       });
 
@@ -220,8 +220,33 @@ describe('POST /api/articles/:article_id/comments', () => {
         .send(comment)
         .expect(404)
         .then(({body}) => {
-          expect(body.msg).toBe('article does not exist');
+          expect(body.msg).toBe('does not exist');
         });
     });
 });
 
+describe('DELETE /api/comments/:comment_id', () => {
+  test('should delete a comment by comment_id and return 204 No Content', () => {
+    return request(app)
+      .delete('/api/comments/1')
+      .expect(204)
+  });
+
+  test('should return 404 Not Found for a valid but non-existent comment_id', () => {
+    return request(app)
+      .delete('/api/comments/99')
+      .expect(404)
+      .then(({body}) => {
+        expect(body.msg).toBe('does not exist');
+      });
+  });
+
+  test('should return 400 Bad Request for an invalid comment_id', () => {
+    return request(app)
+      .delete('/api/comments/not-a-validComment_id')
+      .expect(400)
+      .then(({body}) => {
+        expect(body.msg).toEqual('Bad Request');
+      });
+  });
+})

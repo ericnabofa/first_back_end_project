@@ -1,4 +1,5 @@
-const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticleId, insertCommentByArticle_Id, selectUsers } = require("./app.model")
+
+const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticleId, insertCommentByArticle_Id, patchArticle, removeCommentByComment_Id, selectUsers } = require("./app.model");
 const endpoints = require('../endpoints.json')
 const { checkArticleExists } = require("./app.articles.model")
 
@@ -65,4 +66,21 @@ exports.getAllUsers = (req, res, next) => {
     res.status(200).send({ users})
     })
     .catch(next)
-    }
+}
+
+exports.deleteCommentByCommentId = (req, res, next) => {
+    const {comment_id} = req.params
+    removeCommentByComment_Id(comment_id).then((deletedComment) => {
+        res.status(204).send({deletedComment})
+    })
+  .catch(next)
+}
+
+exports.updateArticle = (req, res, next) => {
+    const {article_id} = req.params
+    const {inc_votes} =  req.body
+    patchArticle(inc_votes, article_id).then((updatedArticle) => {
+        res.status(200).send({updatedArticle})
+    })
+    .catch(next)
+}

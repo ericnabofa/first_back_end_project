@@ -11,8 +11,9 @@ return db.query(`SELECT * FROM topics`)
 
 // Ticket 5_Get-Articles
 
-exports.selectArticles = () => {
-    return db.query(`
+exports.selectArticles = (topic) => {
+        let query = 
+        `
         SELECT 
             a.article_id,
             a.author,
@@ -25,15 +26,28 @@ exports.selectArticles = () => {
         FROM 
             articles a
         LEFT JOIN 
-            comments c ON a.article_id = c.article_id
-        GROUP BY 
+            comments c ON a.article_id = c.article_id`;
+
+            if (topic !== undefined) {
+                query += ' WHERE a.topic = $1';
+            }
+
+            query += `
+            GROUP BY 
             a.article_id, a.author, a.title, a.topic, a.created_at, a.votes, a.article_img_url
         ORDER BY 
-            a.created_at DESC
-    `)
-    .then(({ rows }) => {
-        return rows;
-    });
+            a.created_at DESC;
+            `
+
+            const queryParams = topic !== undefined ? [topic] : []
+
+            return db.query(query, queryParams)
+            .then(({ rows }) => {
+                if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'article does not exist' });
+                }
+            return rows;
+        });
 };
 
 

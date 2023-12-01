@@ -70,6 +70,28 @@ describe("GET /api/articles/:article_id", () => {
           votes: 100,
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: expect.any(String),
+        });
+      });
+  });
+
+  test("200: should respond with an article object gotten by its article_id that includes its comments_count", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        const actualCreatedAt = article.created_at;
+        expect(article).toMatchObject({
+          author: "butter_bridge",
+          title: "Living in the shadow of a great man",
+          article_id: 1,
+          body: "I find this existence challenging",
+          topic: "mitch",
+          created_at: actualCreatedAt,
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
       });
   });
@@ -79,7 +101,7 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/100")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("article does not exist");
+        expect(response.body.msg).toBe("does not exist");
       });
   });
 
@@ -136,7 +158,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/100/comments")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("article does not exist");
+        expect(response.body.msg).toBe("does not exist");
       });
   });
   
@@ -223,7 +245,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(comment)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("article does not exist");
+        expect(body.msg).toBe("does not exist");
       });
   });
 });
@@ -249,7 +271,6 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(newVote)
       .expect(200)
       .then(({ body }) => {
-        console.log(body, 'artcle to patch')
         const {updatedArticle} = body
         const actualCreatedAt = updatedArticle.created_at
         expect(updatedArticle).toMatchObject({

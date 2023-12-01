@@ -26,6 +26,7 @@ describe("GET /api/topics", () => {
   });
 });
 
+
 describe("GET /api/articles", () => {
   test("200: responds with an array of all articles", () => {
     return request(app)
@@ -92,6 +93,7 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
+
 describe("GET /api", () => {
   test("should respond with the content of endpoints.json", () => {
     return request(app)
@@ -102,6 +104,7 @@ describe("GET /api", () => {
       });
   });
 });
+
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: responds with an array of comments for the given article_id", () => {
@@ -126,6 +129,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(comments).toBeSortedBy("created_at", { descending: true });
       });
   });
+  
 
   test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
     return request(app)
@@ -135,6 +139,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(response.body.msg).toBe("article does not exist");
       });
   });
+  
 
   test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
     return request(app)
@@ -145,6 +150,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 
+  
   test("200: responds with an empty array when the article has no comments", () => {
     return request(app)
       .get("/api/articles/8/comments")
@@ -156,6 +162,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
 
 describe("POST /api/articles/:article_id/comments", () => {
   test("should respond with the posted comment object", () => {
@@ -179,6 +186,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         });
       });
   });
+  
   test("POST:400 sends an appropriate status and error message when given a non-existent article_id", () => {
     const comment = {
       username: "butter_bridge",
@@ -192,6 +200,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
+  
   test("POST:400 sends an appropriate status and error message when given an invalid comment", () => {
     const comment = {};
     return request(app)
@@ -295,7 +304,34 @@ describe("PATCH /api/articles/:article_id", () => {
         .send({ inc_votes: 5 })
         .expect(404)
         .then(({body}) => {
-          expect(body.msg).toBe('article does not exist')
+          expect(body.msg).toBe('does not exist');
         });
     });
+});
+
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('should delete a comment by comment_id and return 204 No Content', () => {
+    return request(app)
+      .delete('/api/comments/1')
+      .expect(204)
   });
+
+  test('should return 404 Not Found for a valid but non-existent comment_id', () => {
+    return request(app)
+      .delete('/api/comments/99')
+      .expect(404)
+      .then(({body}) => {
+        expect(body.msg).toBe('does not exist');
+      });
+  });
+
+  test('should return 400 Bad Request for an invalid comment_id', () => {
+    return request(app)
+      .delete('/api/comments/not-a-validComment_id')
+      .expect(400)
+      .then(({body}) => {
+        expect(body.msg).toEqual('Bad Request');
+      });
+  });
+})

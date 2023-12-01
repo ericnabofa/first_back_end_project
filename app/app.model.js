@@ -51,8 +51,44 @@ exports.selectArticles = (topic) => {
 };
 
 
-exports.selectArticleById = (article_id) => {
-    return db.query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+exports.selectArticleById = (article_id, includeCommentCount = false) => {
+    let query = `
+        SELECT 
+            a.article_id,
+            a.author,
+            a.title,
+            a.body,
+            a.topic,
+            a.created_at,
+            a.votes,
+            a.article_img_url`;
+
+    if (includeCommentCount) {
+        query += `,
+            COUNT(c.comment_id) AS comment_count`;
+    }
+
+    query += `
+        FROM 
+            articles a`;
+
+    if (includeCommentCount) {
+        query += `
+            LEFT JOIN 
+                comments c ON a.article_id = c.article_id`;
+    }
+
+    query += `
+        WHERE 
+            a.article_id = $1`;
+
+    if (includeCommentCount) {
+        query += `
+        GROUP BY 
+            a.article_id, a.author, a.title, a.body, a.topic, a.created_at, a.votes, a.article_img_url`;
+    }
+
+    return db.query(query, [article_id])
     .then(({rows}) => {
         if(!rows.length){
             return Promise.reject({status: 404, msg: 'does not exist'})
@@ -126,7 +162,6 @@ exports.patchArticle = (inc_votes, article_id) => {
 
     return db.query(queryString, queryValues)
     .then(({rows}) => {
-        console.log(rows, 'rows')
         if(!rows.length){
             return Promise.reject({status: 404, msg: 'article does not exist'})
         }

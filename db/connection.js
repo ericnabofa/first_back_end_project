@@ -5,6 +5,7 @@ const pathToEnvFile = `${__dirname}/../.env.${ENV}`
 require('dotenv').config({path: pathToEnvFile})
 const PGDATABASE = process.env.PGDATABASE
 
+
 console.log(`the node environment is ...${ENV}`)
 console.log(`the path is ...${pathToEnvFile}`)
 console.log(`the database is ...${PGDATABASE}`)

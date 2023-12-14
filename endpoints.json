@@ -33,19 +33,51 @@
     "queries": [],
     "exampleResponse": {
       "article": [
-        {"title": "Living in the shadow of a great man",
-        "topic": "mitch",
-        "author": "butter_bridge",
-        "body": "I find this existence challenging",
-        "created_at": 1594329060000,
-        "votes": 100,
-        "article_img_url":
-          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-        "comment_count": 4
+        {
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": 1594329060000,
+          "votes": 100,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 4
+        }
+      ]
+    }
+  },
+
+  "GET /api/articles/:article_id/comments": {
+    "description": "responds with an array of comments for the given article_id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 89,
+          "votes": 2,
+          "created_at": "2020-10-24T07:08:00.000Z",
+          "author": "cooljmessy",
+          "body": "Esse et expedita harum non. Voluptatibus commodi voluptatem. Minima velit suscipit numquam ea. Id vitae debitis aut incidunt odio quo quam possimus ipsum.",
+          "article_id": 1
+        }
+      ]
+    }
+  },
+
+  "POST / api/articles/:article_id/comments": {
+    "description": "should respond with the posted comment object for the given article_id",
+    "queries": ["body", "username"],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 145,
+          "votes": 10,
+          "created_at": "2020-10-03T14:18:00.000Z",
+          "author": "jessjelly",
+          "body": "Odit aut error. Occaecati et qui. Quam nam aut dolorem.",
+          "article_id": 3
         }
       ]
     }
   }
-
-
 }

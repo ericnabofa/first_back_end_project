@@ -2,6 +2,7 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
@@ -76,6 +77,43 @@
           "author": "jessjelly",
           "body": "Odit aut error. Occaecati et qui. Quam nam aut dolorem.",
           "article_id": 3
+        }
+      ]
+    }
+  },
+
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [{
+        "username": "tickle122",
+        "name": "Tom Tickle",
+        "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        }]
+    }
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the given comment by its comment_id",
+    "queries":[],
+    "exampleResponse":{}
+  },
+
+  "PATCH /api/articles/:article_id": {
+    "description": "updates an article's votes by its article_id",
+    "queries": ["inc_votes"],
+    "exampleResponse": {
+      "article": [
+        {
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": 1594329060000,
+          "votes": 100,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 4
         }
       ]
     }

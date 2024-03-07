@@ -45,7 +45,13 @@ DELETE /api/comments/:comment_id: Delete a comment
 GET /api/topics: Get all topics
 GET /api/users: Get all users
 
+# API Documentation
 Refer to 'https://first-back-end-project.onrender.com/api' for more details on each endpoints
+
+nb If your data is appearing on one line, it can be hard to read. You may find it easier to read by installing a JSON Formatter extension to your browser. 
+
+I recommend 'https://chromewebstore.google.com/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa?hl=en' for Chrome.
+
 
 # Built with
 Node.js
